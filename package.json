@@ -1,0 +1,15 @@
+{
+  "name": "uralcampuslib",
+  "version": "1.0.0",
+  "description": "Библиотека для взаимодействия с API Образовательного холдинга",
+  "main": "src/index.js",
+  "type": "module",
+  "author": {
+    "name": "vista9",
+    "email": "vista9@duck.com"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
