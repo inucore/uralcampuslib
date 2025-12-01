@@ -65,12 +65,12 @@ class ScheduleAPI {
         if (!groupID) throw new Error("Group GUID is required");
         if (!dateBegin) {
             let date = new Date();
-            dateBegin = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+            dateBegin = `${date.getDate() < 10 ? '0' : ''}${date.getDate()}-${(date.getMonth() + 1) < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getFullYear()}`;
         }
         if (!dateEnd) {
             let date = new Date();
             date.setDate(date.getDate() + 7);
-            dateEnd = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+            dateEnd = `${date.getDate() < 10 ? '0' : ''}${date.getDate()}-${(date.getMonth() + 1) < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getFullYear()}`;
         }
 
         const response = await fetch(BASE_URLS[this.institution].groupLessons(groupID, dateBegin, dateEnd));
@@ -94,12 +94,12 @@ class ScheduleAPI {
         if (!teacherID) throw new Error("Teacher GUID is required");
         if (!dateBegin) {
             let date = new Date();
-            dateBegin = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+            dateBegin = `${date.getDate() < 10 ? '0' : ''}${date.getDate()}-${(date.getMonth() + 1) < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getFullYear()}`;
         }
         if (!dateEnd) {
             let date = new Date();
             date.setDate(date.getDate() + 7);
-            dateEnd = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+            dateEnd = `${date.getDate() < 10 ? '0' : ''}${date.getDate()}-${(date.getMonth() + 1) < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getFullYear()}`;
         }
 
         const response = await fetch(BASE_URLS[this.institution].teacherLessons(teacherID, dateBegin, dateEnd));
