@@ -13,17 +13,17 @@ const BASE_URLS = {
     },
 };
 
-import { ProxyAgent } from 'undici';
+import { Socks5ProxyAgent } from 'undici';
 
 class ScheduleAPI {
     /**
      * Creates an instance of the ScheduleAPI class
-     * @param {{ institution: keyof typeof BASE_URLS, proxy?: string | ProxyAgent.Options }} options The institution to use for fetching schedule data
+     * @param {{ institution: keyof typeof BASE_URLS, socks5?: string | Socks5ProxyAgent.Options }} options The institution to use for fetching schedule data
      */
     constructor(options) {
         if (!options.institution) throw new Error("Institution is required");
         if (!BASE_URLS[options.institution]) throw new Error("Invalid institution provided");
-        if (options.proxy) this.proxyAgent = new ProxyAgent(options.proxy);
+        if (options.socks5) this.socksProxyAgent = new Socks5ProxyAgent(options.socks5);
         this.institution = options.institution;
     }
 
@@ -32,7 +32,7 @@ class ScheduleAPI {
      * @returns {Promise<{ groups: readonly { guid: string, name: string }[] }>}
      */
     async fetchGroups() {
-        const initOptions = this.proxyAgent ? { dispatcher: this.proxyAgent } : {};
+        const initOptions = this.socksProxyAgent ? { dispatcher: this.socksProxyAgent } : {};
         const response = await fetch(BASE_URLS[this.institution].groups, initOptions);
         if (!response.ok) throw new Error(`Failed to fetch groups: ${response.statusText}`);
 
@@ -48,7 +48,7 @@ class ScheduleAPI {
      * @returns {Promise<{ teachers: readonly { guid: string, name: string }[] }>}
      */
     async fetchTeachers() {
-        const initOptions = this.proxyAgent ? { dispatcher: this.proxyAgent } : {};
+        const initOptions = this.socksProxyAgent ? { dispatcher: this.socksProxyAgent } : {};
         const response = await fetch(BASE_URLS[this.institution].teachers, initOptions);
         if (!response.ok) throw new Error(`Failed to fetch teachers: ${response.statusText}`);
 
@@ -78,7 +78,7 @@ class ScheduleAPI {
             dateEnd = `${date.getDate() < 10 ? '0' : ''}${date.getDate()}-${(date.getMonth() + 1) < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getFullYear()}`;
         }
 
-        const initOptions = this.proxyAgent ? { dispatcher: this.proxyAgent } : {};
+        const initOptions = this.socksProxyAgent ? { dispatcher: this.socksProxyAgent } : {};
         const response = await fetch(BASE_URLS[this.institution].groupLessons(groupID, dateBegin, dateEnd), initOptions);
         if (!response.ok) throw new Error(`Failed to fetch group lessons: ${response.statusText}`);
 
@@ -108,7 +108,7 @@ class ScheduleAPI {
             dateEnd = `${date.getDate() < 10 ? '0' : ''}${date.getDate()}-${(date.getMonth() + 1) < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getFullYear()}`;
         }
 
-        const initOptions = this.proxyAgent ? { dispatcher: this.proxyAgent } : {};
+        const initOptions = this.socksProxyAgent ? { dispatcher: this.socksProxyAgent } : {};
         const response = await fetch(BASE_URLS[this.institution].teacherLessons(teacherID, dateBegin, dateEnd), initOptions);
         if (!response.ok) throw new Error(`Failed to fetch teacher lessons: ${response.statusText}`);
 
