@@ -13,7 +13,7 @@ const BASE_URLS = {
     },
 };
 
-import { Socks5ProxyAgent } from 'undici';
+import { fetch, Socks5ProxyAgent } from 'undici';
 
 class ScheduleAPI {
     /**
@@ -23,7 +23,7 @@ class ScheduleAPI {
     constructor(options) {
         if (!options.institution) throw new Error("Institution is required");
         if (!BASE_URLS[options.institution]) throw new Error("Invalid institution provided");
-        if (options.socks5) this.socksProxyAgent = new Socks5ProxyAgent(options.socks5);
+        if (options.socks5) this.socksProxyAgent = new Socks5ProxyAgent(options.socks5?.uri ?? options.socks5, options.socks5?.options ?? {});
         this.institution = options.institution;
     }
 
