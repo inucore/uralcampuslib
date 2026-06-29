@@ -13,14 +13,17 @@ const BASE_URLS = {
     },
 };
 
+import { ProxyAgent } from 'undici';
+
 class ScheduleAPI {
     /**
      * Creates an instance of the ScheduleAPI class
-     * @param {{ institution: keyof typeof BASE_URLS }} options The institution to use for fetching schedule data
+     * @param {{ institution: keyof typeof BASE_URLS, proxy?: string }} options The institution to use for fetching schedule data
      */
     constructor(options) {
         if (!options.institution) throw new Error("Institution is required");
         if (!BASE_URLS[options.institution]) throw new Error("Invalid institution provided");
+        if (options.proxy) this.proxyAgent = new ProxyAgent(options.proxy);
         this.institution = options.institution;
     }
 
@@ -29,7 +32,8 @@ class ScheduleAPI {
      * @returns {Promise<{ groups: readonly { guid: string, name: string }[] }>}
      */
     async fetchGroups() {
-        const response = await fetch(BASE_URLS[this.institution].groups);
+        const initOptions = this.proxyAgent ? { dispatcher: this.proxyAgent } : {};
+        const response = await fetch(BASE_URLS[this.institution].groups, initOptions);
         if (!response.ok) throw new Error(`Failed to fetch groups: ${response.statusText}`);
 
         const data = await response.json();
@@ -44,12 +48,13 @@ class ScheduleAPI {
      * @returns {Promise<{ teachers: readonly { guid: string, name: string }[] }>}
      */
     async fetchTeachers() {
-        const response = await fetch(BASE_URLS[this.institution].teachers);
+        const initOptions = this.proxyAgent ? { dispatcher: this.proxyAgent } : {};
+        const response = await fetch(BASE_URLS[this.institution].teachers, initOptions);
         if (!response.ok) throw new Error(`Failed to fetch teachers: ${response.statusText}`);
 
         const data = await response.json();
         if (data.code != 200 || data.error.length > 0)
-            throw new Error(`Error fetching groups: ${data.error.join(", ")} (API code: ${data.code})`);
+            throw new Error(`Error fetching teachers: ${data.error.join(", ")} (API code: ${data.code})`);
 
         return data.message;
     }
@@ -73,7 +78,8 @@ class ScheduleAPI {
             dateEnd = `${date.getDate() < 10 ? '0' : ''}${date.getDate()}-${(date.getMonth() + 1) < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getFullYear()}`;
         }
 
-        const response = await fetch(BASE_URLS[this.institution].groupLessons(groupID, dateBegin, dateEnd));
+        const initOptions = this.proxyAgent ? { dispatcher: this.proxyAgent } : {};
+        const response = await fetch(BASE_URLS[this.institution].groupLessons(groupID, dateBegin, dateEnd), initOptions);
         if (!response.ok) throw new Error(`Failed to fetch group lessons: ${response.statusText}`);
 
         const data = await response.json();
@@ -102,7 +108,8 @@ class ScheduleAPI {
             dateEnd = `${date.getDate() < 10 ? '0' : ''}${date.getDate()}-${(date.getMonth() + 1) < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getFullYear()}`;
         }
 
-        const response = await fetch(BASE_URLS[this.institution].teacherLessons(teacherID, dateBegin, dateEnd));
+        const initOptions = this.proxyAgent ? { dispatcher: this.proxyAgent } : {};
+        const response = await fetch(BASE_URLS[this.institution].teacherLessons(teacherID, dateBegin, dateEnd), initOptions);
         if (!response.ok) throw new Error(`Failed to fetch teacher lessons: ${response.statusText}`);
 
         const data = await response.json();

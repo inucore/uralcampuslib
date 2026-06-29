@@ -1,6 +1,6 @@
 {
   "name": "uralcampuslib",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Библиотека для взаимодействия с API Образовательного холдинга",
   "main": "src/index.js",
   "type": "module",
@@ -11,5 +11,8 @@
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "undici": "^6.27.0"
   }
 }
