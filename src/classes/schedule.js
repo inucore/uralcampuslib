@@ -18,7 +18,7 @@ import { ProxyAgent } from 'undici';
 class ScheduleAPI {
     /**
      * Creates an instance of the ScheduleAPI class
-     * @param {{ institution: keyof typeof BASE_URLS, proxy?: string }} options The institution to use for fetching schedule data
+     * @param {{ institution: keyof typeof BASE_URLS, proxy?: string | ProxyAgent.Options }} options The institution to use for fetching schedule data
      */
     constructor(options) {
         if (!options.institution) throw new Error("Institution is required");
